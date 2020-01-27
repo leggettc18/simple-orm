@@ -16,7 +16,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "leggettc18\\SimpleOrm\\" : "src/"
+            "leggettc18\\SimpleORM\\" : "src/"
         }
     }
 }
