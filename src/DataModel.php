@@ -505,7 +505,7 @@ abstract class DataModel {
         //prepare, bind & execute
         static::sql($sql, self::FETCH_NONE, array_values($values));
 
-        $lastId = static::getConnection()->listInsertId();
+        $lastId = static::getConnection()->lastInsertId();
 
         // set our PK (if exists)
         if ($lastId) {
