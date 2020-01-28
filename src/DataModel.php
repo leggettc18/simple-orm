@@ -646,6 +646,26 @@ abstract class DataModel {
     }
 
     /**
+     * Parse a value type.
+     * 
+     * @access protected
+     * @param mixed $value
+     * @return string
+     */
+    protected static function parseValueType($value) {
+        // ints
+        if (is_int($value)) {
+            return 'i';
+        }
+
+        // doubles
+        if (is_double($value)) {
+            return 'd';
+        }
+
+        return 's';
+    }
+    /**
      * Revert the object by reloading our data.
      * 
      * @access public
