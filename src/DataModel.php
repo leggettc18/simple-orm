@@ -935,7 +935,7 @@ abstract class DataModel {
 
         if (substr($name, 0, 7) == 'countBy') {
             // prepend field name to args
-            $field = strtolower(preg_replace('/\B([A-Z])/', '_${1}', substr($name, 10)));
+            $field = strtolower(preg_replace('/\B([A-Z])/', '_${1}', substr($name, 7)));
             array_unshift($args, $field);
 
             return call_user_func_array([$class, 'countByField'], $args);
@@ -988,7 +988,7 @@ abstract class DataModel {
         // build our query
         $operator = (strpos($value, '%') === false) ? '=' : 'LIKE';
         
-        $sql = sprintf("SELECT count(*) * FROM :table WHERE %s %s '%s'", $field, $operator, $value);
+        $sql = sprintf("SELECT count(*) FROM :table WHERE %s %s '%s'", $field, $operator, $value);
 
         // fetch our records
         return static::count($sql);
