@@ -913,6 +913,8 @@ abstract class DataModel {
      * e.g.
      * 1) Foo::retrieveByTitle('Hello World') is equal to Foo::retrieveByField('title', 'HelloWorld');
      * 2) Foo::retrieveByIsPublic(true) is equal to Foo::retrieveByField('is_public', true);
+     * Also follows the same pattern for countBy i.e.
+     * Foo::countByPostId($value) = Foo::countByField($post_id, $value))
      * 
      * @access public
      * @static
@@ -929,6 +931,14 @@ abstract class DataModel {
             array_unshift($args, $field);
 
             return call_user_func_array([$class, 'retrieveByField'], $args);
+        }
+
+        if (substr($name, 0, 7) == 'countBy') {
+            // prepend field name to args
+            $field = strtolower(preg_replace('/\B([A-Z])/', '_${1}', substr($name, 10)));
+            array_unshift($args, $field);
+
+            return call_user_func_array([$class, 'countByField'], $args);
         }
 
         throw new Exception(sprintf('There is no static method named "%s" in the class "%s".', $name, $class));
@@ -959,6 +969,29 @@ abstract class DataModel {
 
         // fetch our records
         return static::sql($sql, $return);
+    }
+
+    /**
+     * Count records by a particular column name.
+     * 
+     * @access public
+     * @static
+     * @param string $field
+     * @param mixed $value
+     * @param integer $return
+     * @return integer
+     */
+    public static function countByField($field, $value) {
+        if (!is_string($field))
+            throw new InvalidArgumentException('The field name must be a string.');
+        
+        // build our query
+        $operator = (strpos($value, '%') === false) ? '=' : 'LIKE';
+        
+        $sql = sprintf("SELECT count(*) * FROM :table WHERE %s %s '%s'", $field, $operator, $value);
+
+        // fetch our records
+        return static::count($sql);
     }
 
     protected static function setCurrentTimestampValue() {
