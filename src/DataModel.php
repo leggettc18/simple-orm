@@ -611,7 +611,7 @@ abstract class DataModel {
         }
 
         // build sql statement
-        $sql = sprintf("DELETE FROM `%s` = ?", static::getTableName(), static::getTablePk());
+        $sql = sprintf("DELETE FROM `%s` WHERE `%s` = ?", static::getTableName(), static::getTablePk());
         $id = $this->id();
 
         // prepare, bind & execute
